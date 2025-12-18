@@ -1,0 +1,86 @@
+<div class="container">
+  <h1>Our Books</h1>
+
+  <form method="GET" action="<%= baseURL %>books">
+    <div class="filter-group">
+      <label>Select Subject</label>
+      <select name="subject">
+        <option value="">All</option>
+        <% subjects.forEach(s => { %>
+          <option value="<%= s.subject %>" <%= query.subject === s.subject ? 'selected' : '' %>>
+            <%= s.subject %>
+          </option>
+        <% }) %>
+      </select>
+      <button>Filter by Subject</button>
+    </div>
+
+    <div class="filter-group">
+      <label>Search by Author</label>
+      <input type="text" name="author" value="<%= query.author || '' %>">
+      <button>Search by Author</button>
+    </div>
+
+    <div class="filter-group">
+      <label>Search by Title</label>
+      <input type="text" name="title" value="<%= query.title || '' %>">
+      <button>Search by Title</button>
+    </div>
+
+    <div class="filter-group items-per-page">
+      <label>Items per page</label>
+      <% [2,3,5,10,20].forEach(n => { %>
+        <a href="?limit=<%= n %>"><%= n %></a>
+      <% }) %>
+    </div>
+  </form>
+
+  <h2>Books</h2>
+
+  <% if (books.length === 0) { %>
+    <p>No books found.</p>
+  <% } %>
+
+  <% books.forEach(book => { %>
+    <div class="book-card">
+      <h4><%= book.title %></h4>
+      <p><strong>Author:</strong> <%= book.author %></p>
+      <p><strong>ISBN:</strong> <%= book.isbn %></p>
+      <p><strong>Price:</strong> $<%= book.price %></p>
+      <p><strong>Subject:</strong> <%= book.subject %></p>
+
+      <form method="POST" action="<%= baseURL %>cart/add">
+        <input type="hidden" name="isbn" value="<%= book.isbn %>">
+        <input type="number" name="quantity" value="1" min="1">
+        <button>Add to Cart</button>
+      </form>
+    </div>
+  <% }) %>
+
+  <div class="pagination">
+
+  <% if (currentPage > 1) { %>
+    <a href="?<%= queryString %>&page=<%= currentPage - 1 %>">Previous</a>
+  <% } %>
+
+  <% if (startPage > 1) { %>
+    <span>...</span>
+  <% } %>
+
+  <% for (let i = startPage; i <= endPage; i++) { %>
+    <a href="?<%= queryString %>&page=<%= i %>"
+       class="<%= i === currentPage ? 'active' : '' %>">
+      <%= i %>
+    </a>
+  <% } %>
+
+  <% if (endPage < totalPages) { %>
+    <span>...</span>
+  <% } %>
+
+  <% if (currentPage < totalPages) { %>
+    <a href="?<%= queryString %>&page=<%= currentPage + 1 %>">Next</a>
+  <% } %>
+
+</div>
+</div>

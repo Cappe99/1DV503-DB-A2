@@ -1,5 +1,4 @@
 import express from 'express'
-// import { AccountController } from '../controllers/accountController.js'
 import { AccountController } from '../controllers/accountController.js'
 
 export const router = express.Router()
