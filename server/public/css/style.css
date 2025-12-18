@@ -36,3 +36,30 @@ header {
 .nav-link:hover {
     color: #007bff; 
 }
+
+.alert {
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    width: 80%;
+  }
+
+  .alert-success {
+    background-color: rgba(76, 175, 80, 0.7);
+    color: white;
+    border: none;
+  }
+
+  .alert-error {
+    background-color: rgba(244, 67, 54, 0.7);
+    color: white;
+    border: none;
+  }
+
+  .alert-info {
+    background-color: rgba(33, 150, 243, 0.7);
+    color: white;
+    border: none;
+  }

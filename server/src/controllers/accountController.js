@@ -25,7 +25,9 @@ export class AccountController {
     try {
       const [rows] = await db.execute('SELECT userid FROM members WHERE email = ?', [email])
       if (rows.length > 0) {
-        return res.render('account/register', { error: 'Email already exists', baseURL: '/' })
+        req.session.flash = { type: 'error', text: 'User Alreday exist' }
+
+        return res.render('account/register', { flash: req.session.flash })
       }
 
       const hashedPassword = await bcrypt.hash(password, 10)
@@ -35,6 +37,8 @@ export class AccountController {
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [fname, lname, address, city, zip, phone, email, hashedPassword]
       )
+
+      req.session.flash = { type: 'success', text: 'Account created successfully.' }
 
       res.redirect('/account/register')
     } catch (err) {

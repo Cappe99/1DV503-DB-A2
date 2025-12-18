@@ -4,6 +4,8 @@ import expressLayouts from 'express-ejs-layouts'
 import { fileURLToPath } from 'node:url'
 import { router } from './routes/router.js'
 import dotenv from 'dotenv'
+import session from 'express-session'
+import { sessionOptions } from './config/sessionOptions.js'
 
 try {
   dotenv.config({ path: './.env' })
@@ -31,8 +33,14 @@ try {
     app.set('trust proxy', 1) // trust first proxy
   }
 
+  app.use(session(sessionOptions))
+
   app.use((req, res, next) => {
-    // Pass the base URL to the views.
+    if (req.session.flash) {
+      res.locals.flash = req.session.flash
+      delete req.session.flash
+    }
+
     res.locals.baseURL = baseURL
 
     next()
