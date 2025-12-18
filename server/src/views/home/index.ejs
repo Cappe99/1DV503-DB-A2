@@ -1,1 +1,6 @@
-<h1>Hej de funkar!</h1>
+<% if (user) { %>
+  <h2>Hej <%= user.fname %> <%= user.lname %></h2>
+<% } else { %>
+  <h2>Välkommen till Book Store</h2>
+  <p>logga in för att kunna använda sidan!</p>
+<% } %>

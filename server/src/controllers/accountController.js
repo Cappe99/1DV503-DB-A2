@@ -46,4 +46,76 @@ export class AccountController {
       res.render('account/register', { error: 'Something went wrong', baseURL: '/' })
     }
   }
+
+  /**
+   *
+   * @param req
+   * @param res
+   */
+  async logInPage (req, res) {
+    res.render('account/login')
+  }
+
+  /**
+   *
+   * @param req
+   * @param res
+   */
+  async loginUser (req, res) {
+    const { email, password } = req.body
+
+    if (!email || !password) {
+      req.session.flash = { type: 'error', text: 'Email and password are required' }
+
+      return res.render('account/login', { flash: req.session.flash })
+    }
+
+    try {
+      const [rows] = await db.execute(
+        'SELECT userid, fname, lname, password FROM members WHERE email = ?',
+        [email]
+      )
+
+      if (rows.length === 0) {
+        req.session.flash = { type: 'error', text: 'Invalid email or password' }
+        return res.render('account/login', { flash: req.session.flash })
+      }
+
+      const user = rows[0]
+
+      const match = await bcrypt.compare(password, user.password)
+
+      if (!match) {
+        req.session.flash = { type: 'error', text: 'Invalid email or password' }
+
+        return res.render('account/login', { flash: req.session.flash })
+      }
+
+      req.session.user = {
+        userid: user.userid,
+        fname: user.fname,
+        lname: user.lname
+      }
+
+      req.session.flash = { type: 'success', text: 'loged in successfully.' }
+
+      res.redirect('/')
+    } catch (err) {
+      console.error(err)
+      req.session.flash = { type: 'error', text: 'Somting went wrong' }
+
+      res.render('account/login', { flash: req.session.flash })
+    }
+  }
+
+  /**
+   *
+   * @param req
+   * @param res
+   */
+  logout (req, res) {
+    req.session.destroy(() => {
+      res.redirect('/')
+    })
+  }
 }

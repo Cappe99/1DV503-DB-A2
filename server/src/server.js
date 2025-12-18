@@ -41,6 +41,8 @@ try {
       delete req.session.flash
     }
 
+    res.locals.user = req.session.user || null
+
     res.locals.baseURL = baseURL
 
     next()
