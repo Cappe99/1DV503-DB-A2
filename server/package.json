@@ -1,14 +1,30 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
+    "dev": "nodemon --inspect --env-file=.env src/server.js",
+    "lint": "npx eslint ./src || exit 0",
+    "lint:fix": "npx eslint ./src --fix || exit 0"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Casper Björlin",
+  "license": "MIT",
   "description": "",
   "dependencies": {
-    "mysql2": "^3.16.0"
+    "mysql2": "^3.16.0",
+    "express": "^4.21.2",
+    "ejs": "^3.1.10",
+    "bcrypt": "^5.1.1",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.18.1",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@lnu/eslint-config": "^1.1.10",
+        "nodemon": "^3.1.9"
+
   }
 }
