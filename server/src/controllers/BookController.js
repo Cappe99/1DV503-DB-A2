@@ -87,4 +87,114 @@ export class BookController {
       next(err)
     }
   }
+
+  /**
+   *
+   * @param req
+   * @param res
+   * @param next
+   */
+  async addToCart (req, res) {
+    const userId = req.session.user?.userid
+    const { isbn, qty } = req.body
+
+    if (!userId || !isbn || !qty) {
+      console.log({ userId, isbn, qty })
+      return res.status(400).send('Missing data')
+    }
+
+    const [rows] = await db.execute(
+      'SELECT qty FROM cart WHERE userid = ? AND isbn = ?',
+      [userId, isbn]
+    )
+
+    if (rows.length > 0) {
+      await db.execute(
+        'UPDATE cart SET qty = qty + ? WHERE userid = ? AND isbn = ?',
+        [qty, userId, isbn]
+      )
+    } else {
+      await db.execute(
+        'INSERT INTO cart (userid, isbn, qty) VALUES (?, ?, ?)',
+        [userId, isbn, qty]
+      )
+    }
+
+    res.redirect('/books')
+  }
+
+  /**
+   *
+   * @param req
+   * @param res
+   */
+  async viewCart (req, res) {
+    const userId = req.session.user.userid
+
+    const [items] = await db.execute(`
+      SELECT
+      c.isbn,
+      b.title,
+      b.price,
+      c.qty,
+      COALESCE(b.price * c.qty, 0) AS rowTotal
+      FROM cart c
+      JOIN books b ON c.isbn = b.isbn
+      WHERE c.userid = ?
+      AND c.qty > 0 
+    `, [userId])
+
+    const total = items.reduce((sum, item) => {
+      const rowTotal = Number(item.rowTotal)
+      return sum + (isNaN(rowTotal) ? 0 : rowTotal)
+    }, 0)
+    res.render('books/cart', {
+      items,
+      total,
+      user: req.session.user
+    })
+  }
+
+  /**
+   *
+   * @param req
+   * @param res
+   */
+  async checkout (req, res) {
+    const userId = req.session.user.userid
+
+    const [[member]] = await db.execute(
+      'SELECT address, city, zip FROM members WHERE userid = ?',
+      [userId]
+    )
+
+    const [cart] = await db.execute(`
+      SELECT c.isbn, c.qty, b.price
+      FROM cart c
+      JOIN books b ON b.isbn = c.isbn
+      WHERE c.userid = ?
+    `, [userId])
+
+    if (cart.length === 0) {
+      return res.redirect('/cart')
+    }
+
+    const [order] = await db.execute(`
+      INSERT INTO orders (userid, created, shipAddress, shipCity, shipZip)
+      VALUES (?, NOW(), ?, ?, ?)
+    `, [userId, member.address, member.city, member.zip])
+
+    const orderNo = order.insertId
+
+    for (const item of cart) {
+      await db.execute(`
+        INSERT INTO odetails (ono, isbn, qty, amount)
+        VALUES (?, ?, ?, ?)
+      `, [orderNo, item.isbn, item.qty, item.qty * item.price])
+    }
+
+    await db.execute('DELETE FROM cart WHERE userid = ?', [userId])
+
+    res.redirect('/orders/success')
+  }
 }

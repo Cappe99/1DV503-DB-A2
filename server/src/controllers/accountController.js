@@ -72,7 +72,7 @@ export class AccountController {
 
     try {
       const [rows] = await db.execute(
-        'SELECT userid, fname, lname, password FROM members WHERE email = ?',
+        'SELECT userid, fname, lname, address, city, zip, password FROM members WHERE email = ?',
         [email]
       )
 
@@ -94,7 +94,10 @@ export class AccountController {
       req.session.user = {
         userid: user.userid,
         fname: user.fname,
-        lname: user.lname
+        lname: user.lname,
+        address: user.address,
+        city: user.city,
+        zip: user.zip
       }
 
       req.session.flash = { type: 'success', text: 'loged in successfully.' }

@@ -6,3 +6,8 @@ export const router = express.Router()
 const controller = new BookController()
 
 router.get('/', (req, res, next) => controller.listBooks(req, res, next))
+
+router.post('/cart/add', (req, res, next) => controller.addToCart(req, res, next))
+router.get('/cart', (req, res, next) => controller.viewCart(req, res, next))
+
+router.post('/cart/checkout', (req, res, next) => controller.checkout(req, res, next))

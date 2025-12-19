@@ -1,0 +1,49 @@
+<div class="invoice-container">
+  <h2>Order Details</h2>
+  
+  <div class="invoice-header">
+    <h3>Invoice for Order no.<%= order.ono %></h3>
+  </div>
+
+  <div class="order-info">
+    <p><strong>Customer:</strong> <%= order.fname %> <%= order.lname %></p>
+    <p><strong>Order date:</strong> <%= orderDate %></p>
+    <p><strong>Delivery date:</strong> <%= deliveryDate %></p>
+  </div>
+
+  <div class="shipping-section">
+    <h4>Shipping Address</h4>
+    <p><strong>Name:</strong> <%= order.fname %> <%= order.lname %></p>
+    <p><strong>Address:</strong> <%= order.shipAddress %><br><%= order.shipCity %>, <%= order.shipZip %></p>
+  </div>
+
+  <div class="books-section">
+    <h4>Books</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>ISBN</th>
+          <th>Title</th>
+          <th>$</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% details.forEach(item => { %>
+          <tr>
+            <td><%= item.isbn %></td>
+            <td><%= item.title %></td>
+            <td>$<%= item.price.toFixed(2) %></td>
+            <td><%= item.qty %></td>
+            <td>$<%= item.amount.toFixed(2) %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="total-section">
+    <h3>Order Total: $<%= total.toFixed(2) %></h3>
+  </div>
+</div>
