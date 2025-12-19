@@ -40,7 +40,7 @@ export class AccountController {
 
       req.session.flash = { type: 'success', text: 'Account created successfully.' }
 
-      res.redirect('/account/register')
+      res.redirect('/account/login')
     } catch (err) {
       console.error(err)
       res.render('account/register', { error: 'Something went wrong', baseURL: '/' })

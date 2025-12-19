@@ -95,6 +95,11 @@ export class BookController {
    * @param next
    */
   async addToCart (req, res) {
+    if (!req.session.user) {
+      req.session.flash = { type: 'info', text: 'Login to add books to cart.' }
+
+      return res.redirect('/account/login')
+    }
     const userId = req.session.user?.userid
     const { isbn, qty } = req.body
 
@@ -120,6 +125,8 @@ export class BookController {
       )
     }
 
+    req.session.flash = { type: 'success', text: 'Successfully addad book to cart.' }
+
     res.redirect('/books')
   }
 
@@ -129,6 +136,10 @@ export class BookController {
    * @param res
    */
   async viewCart (req, res) {
+    if (!req.session.user) {
+      return res.redirect('/account/login')
+    }
+
     const userId = req.session.user.userid
 
     const [items] = await db.execute(`

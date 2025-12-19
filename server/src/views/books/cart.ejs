@@ -1,36 +1,42 @@
-<h1>Shopping Cart</h1>
+<div class="cart-container">
+  <h1>Shopping Cart</h1>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>ISBN</th>
-      <th>Title</th>
-      <th>$</th>
-      <th>Quantity</th>
-      <th>Total</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% if (items.length === 0) { %>
+  <table class="cart-table">
+    <thead>
       <tr>
-        <td colspan="5">Your cart is empty</td>
+        <th>ISBN</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
       </tr>
-    <% } %>
+    </thead>
+    <tbody>
+      <% if (items.length === 0) { %>
+        <tr>
+          <td colspan="5" class="empty-message">Your cart is empty</td>
+        </tr>
+      <% } %>
 
-    <% items.forEach(item => { %>
-      <tr>
-        <td><%= item.isbn %></td>
-        <td><%= item.title %></td>
-        <td>$<%= item.price.toFixed(2) %></td>
-        <td><%= item.qty %></td>
-        <td>$<%= item.rowTotal.toFixed(2) %></td>
-      </tr>
-    <% }) %>
-  </tbody>
-</table>
+      <% items.forEach(item => { %>
+        <tr>
+          <td><%= item.isbn %></td>
+          <td><%= item.title %></td>
+          <td>$<%= item.price.toFixed(2) %></td>
+          <td><%= item.qty %></td>
+          <td>$<%= item.rowTotal.toFixed(2) %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
 
-<h3>Total: $<%= total.toFixed(2) %></h3>
+  <% if (items.length > 0) { %>
+    <div class="cart-total">
+      <h3>Total: $<%= total.toFixed(2) %></h3>
+    </div>
 
-<form method="POST" action="/checkout">
-  <button type="submit">Checkout</button>
-</form>
+    <form method="POST" action="/checkout">
+      <button type="submit" class="checkout-btn">Checkout</button>
+    </form>
+  <% } %>
+</div>

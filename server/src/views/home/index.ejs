@@ -1,6 +1,33 @@
+
 <% if (user) { %>
-  <h2>Hej <%= user.fname %> <%= user.lname %></h2>
+  <div class="welcome-container welcome-user">
+    <h2>Welcome back, <%= user.fname %> <%= user.lname %>!</h2>
+    <p>It's great to see you again.</p>
+    
+    <div class="feature-list">
+      <p><strong>You can now:</strong></p>
+      <p>• Browse through our book collection</p>
+      <p>• Add books to your cart and place orders</p>
+    </div>
+    
+    <p><strong>Ready to start shopping?</strong> Search through our categories!</p>
+  </div>
+
 <% } else { %>
-  <h2>Välkommen till Book Store</h2>
-  <p>logga in för att kunna använda sidan!</p>
+  <div class="welcome-container welcome-guest">
+    <h2>Welcome to our Online Bookstore</h2>
+    <p>We offer a wide selection of books in all possible categories.</p>
+    
+    <div class="feature-list">
+      <p><strong>To start shopping, you need to:</strong></p>
+      <p>• Create an account or log in if you already have one</p>
+      <p>• Add books to your shopping cart</p>
+      <p>• Complete your order</p>
+    </div>
+
+    <div class="login-prompt">
+      <p>You can <strong><a href="/account/login" class="login-link">log in here</a></strong> right now to get access to all features.</p>
+      <p>Or create a <strong><a href="/account/register" class="login-link">new account</a></strong> if you don't have one yet.</p>
+    </div>
+  </div>
 <% } %>
